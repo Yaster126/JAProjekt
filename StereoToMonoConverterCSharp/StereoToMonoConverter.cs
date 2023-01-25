@@ -7,7 +7,7 @@ namespace StereoToMonoConverterCSharp
 {
 	public class StereoToMonoConverter
 	{
-		public static float[] StereoToMono(float[] data, int channels)
+		public static float[] StereoToMono(float[] data, int index, int channels)
 		{
 			int resultSize = data.Length / channels;
 			float[] result = new float[resultSize];

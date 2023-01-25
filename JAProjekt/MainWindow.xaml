@@ -14,7 +14,7 @@
     </Window.Background>
     <Grid>
         <Rectangle HorizontalAlignment="Left" Margin="45,40,0,0" Stroke="White" Width="840" StrokeThickness="3" Height="185" VerticalAlignment="Top" RenderTransformOrigin="1,0" RadiusY="22.5" RadiusX="22.5"/>
-        <Rectangle HorizontalAlignment="Center" Margin="0,250,0,0" Stroke="White" Width="840" StrokeThickness="3" Height="95" VerticalAlignment="Top" RenderTransformOrigin="1,0" RadiusY="22.5" RadiusX="22.5"/>
+        <Rectangle HorizontalAlignment="Left" Margin="45,250,0,0" Stroke="White" Width="840" StrokeThickness="3" Height="95" VerticalAlignment="Top" RenderTransformOrigin="1,0" RadiusY="22.5" RadiusX="22.5"/>
         <Rectangle HorizontalAlignment="Left" Margin="45,375,0,0" Stroke="White" Width="225" StrokeThickness="3" Height="140" VerticalAlignment="Top" RenderTransformOrigin="1,0" RadiusY="22.5" RadiusX="22.5"/>
         <Label x:Name="FileName" Content="&lt;Nie wybrano pliku&gt;" HorizontalAlignment="Center" Height="65" Margin="0,59,0,0" VerticalAlignment="Top" Width="780" FontSize="24" Foreground="White"/>
         <RadioButton x:Name="CSharp" Content="C#" HorizontalAlignment="Left" Height="30" Margin="75,415,0,0" VerticalAlignment="Top" Width="150" Foreground="White" FontSize="16" IsChecked="True"/>
@@ -36,6 +36,7 @@
                 </TransformGroup>
             </Slider.RenderTransform>
         </Slider>
+        <Label x:Name="Timer" Content="Czas:" HorizontalAlignment="Left" Height="30" Margin="320,430,0,0" VerticalAlignment="Top" Width="145" Foreground="White" FontSize="14"/>
 
     </Grid>
 </Window>
