@@ -15,6 +15,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Media;
+using NAudio;
+using NAudio.Wave;
 
 namespace JAProjekt
 {
@@ -26,11 +28,34 @@ namespace JAProjekt
 		private SoundPlayer player;
 		private string inputPath = "";
 		private string outputPath = "";
+		private float[] Stereo = Array.Empty<float>();
+		private float[] Mono = Array.Empty<float>();
 
+
+		public void ReadWav(string path)
+		{
+			using (MediaFoundationReader media = new MediaFoundationReader(path))
+			{
+				int _byteBuffer32_length = (int)media.Length * 2;
+				int _floatBuffer_length = _byteBuffer32_length / sizeof(float);
+
+				IWaveProvider stream32 = new Wave16ToFloatProvider(media);
+				WaveBuffer _waveBuffer = new(_byteBuffer32_length);
+				stream32.Read(_waveBuffer, 0, (int)_byteBuffer32_length);
+				floatBuffer = new float[_floatBuffer_length];
+
+				for (int i = 0; i < _floatBuffer_length; i++)
+				{
+					floatBuffer[i] = _waveBuffer.FloatBuffer[i];
+				}
+			}
+		}
 
 		public void WriteWav(float[] floatOutput)
 		{
-		
+			WaveFormat waveFormat = new WaveFormat(sampleRate, bitsPerSample, 1);
+			using WaveFileWriter writer = new(outputPath, waveFormat);
+			writer.WriteSamples(floatOutput, 0, floatOutput.Length);
 		}
 
 		public MainWindow()
@@ -46,7 +71,7 @@ namespace JAProjekt
 			if (openFileDialog.ShowDialog() == true)
 			{
 				inputPath = openFileDialog.FileName;
-				Title.Content = openFileDialog.SafeFileName;
+				FileName.Content = openFileDialog.SafeFileName;
 
 				Play_Stereo.IsEnabled = true;
 			}

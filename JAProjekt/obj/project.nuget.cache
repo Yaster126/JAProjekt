@@ -1,8 +1,20 @@
 {
   "version": 2,
-  "dgSpecHash": "tTOrXiI3YqIcj9fVllDJT6yVrSAMyiT+Kq9615nhXFfwK1AKtcyIR1GK4CQ7T3tCtHRpN01ybTzaKwEW+LQV/g==",
+  "dgSpecHash": "oEBvZnDWHzzr3O3RNILfeqQUxTowXWtyrlmLjnEAHqXmPr7BQzbaa6pQKGVF+GVBJ0GH8OHuWdBWAPIvNmIZ/g==",
   "success": true,
   "projectFilePath": "C:\\Grzesia\\Projekty\\Visual Studio 2022\\JAProjekt\\JAProjekt\\JAProjekt.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\Grzesiek\\.nuget\\packages\\microsoft.netcore.platforms\\3.1.0\\microsoft.netcore.platforms.3.1.0.nupkg.sha512",
+    "C:\\Users\\Grzesiek\\.nuget\\packages\\microsoft.win32.registry\\4.7.0\\microsoft.win32.registry.4.7.0.nupkg.sha512",
+    "C:\\Users\\Grzesiek\\.nuget\\packages\\naudio\\2.1.0\\naudio.2.1.0.nupkg.sha512",
+    "C:\\Users\\Grzesiek\\.nuget\\packages\\naudio.asio\\2.1.0\\naudio.asio.2.1.0.nupkg.sha512",
+    "C:\\Users\\Grzesiek\\.nuget\\packages\\naudio.core\\2.1.0\\naudio.core.2.1.0.nupkg.sha512",
+    "C:\\Users\\Grzesiek\\.nuget\\packages\\naudio.midi\\2.1.0\\naudio.midi.2.1.0.nupkg.sha512",
+    "C:\\Users\\Grzesiek\\.nuget\\packages\\naudio.wasapi\\2.1.0\\naudio.wasapi.2.1.0.nupkg.sha512",
+    "C:\\Users\\Grzesiek\\.nuget\\packages\\naudio.winforms\\2.1.0\\naudio.winforms.2.1.0.nupkg.sha512",
+    "C:\\Users\\Grzesiek\\.nuget\\packages\\naudio.winmm\\2.1.0\\naudio.winmm.2.1.0.nupkg.sha512",
+    "C:\\Users\\Grzesiek\\.nuget\\packages\\system.security.accesscontrol\\4.7.0\\system.security.accesscontrol.4.7.0.nupkg.sha512",
+    "C:\\Users\\Grzesiek\\.nuget\\packages\\system.security.principal.windows\\4.7.0\\system.security.principal.windows.4.7.0.nupkg.sha512"
+  ],
   "logs": []
 }
