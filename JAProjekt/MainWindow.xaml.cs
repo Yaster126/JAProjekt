@@ -28,6 +28,7 @@ namespace JAProjekt
 		private SoundPlayer player;
 		private string inputPath = "";
 		private string outputPath = "";
+		private int sampleRate = 0;
 		private float[] Stereo = Array.Empty<float>();
 		private float[] Mono = Array.Empty<float>();
 
@@ -42,11 +43,11 @@ namespace JAProjekt
 				IWaveProvider stream32 = new Wave16ToFloatProvider(media);
 				WaveBuffer _waveBuffer = new(_byteBuffer32_length);
 				stream32.Read(_waveBuffer, 0, (int)_byteBuffer32_length);
-				floatBuffer = new float[_floatBuffer_length];
+				Stereo = new float[_floatBuffer_length];
 
 				for (int i = 0; i < _floatBuffer_length; i++)
 				{
-					floatBuffer[i] = _waveBuffer.FloatBuffer[i];
+					Stereo[i] = _waveBuffer.FloatBuffer[i];
 				}
 			}
 		}
