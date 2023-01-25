@@ -178,6 +178,19 @@
             "rid": "win"
           }
         }
+      },
+      "StereoToMonoConverterCSharp/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "dependencies": {
+          "NAudio": "2.1.0"
+        },
+        "compile": {
+          "bin/placeholder/StereoToMonoConverterCSharp.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/StereoToMonoConverterCSharp.dll": {}
+        }
       }
     }
   },
@@ -447,11 +460,17 @@
         "useSharedDesignerContext.txt",
         "version.txt"
       ]
+    },
+    "StereoToMonoConverterCSharp/1.0.0": {
+      "type": "project",
+      "path": "../StereoToMonoConverterCSharp/StereoToMonoConverterCSharp.csproj",
+      "msbuildProject": "../StereoToMonoConverterCSharp/StereoToMonoConverterCSharp.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net6.0-windows7.0": [
-      "NAudio >= 2.1.0"
+      "NAudio >= 2.1.0",
+      "StereoToMonoConverterCSharp >= 1.0.0"
     ]
   },
   "packageFolders": {
@@ -485,7 +504,11 @@
       "frameworks": {
         "net6.0-windows7.0": {
           "targetAlias": "net6.0-windows",
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Grzesia\\Projekty\\Visual Studio 2022\\JAProjekt\\StereoToMonoConverterCSharp\\StereoToMonoConverterCSharp.csproj": {
+              "projectPath": "C:\\Grzesia\\Projekty\\Visual Studio 2022\\JAProjekt\\StereoToMonoConverterCSharp\\StereoToMonoConverterCSharp.csproj"
+            }
+          }
         }
       },
       "warningProperties": {

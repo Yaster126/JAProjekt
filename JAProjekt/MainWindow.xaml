@@ -23,7 +23,7 @@
         <Button x:Name="Play_Stereo" Content="Odtwórz Stereo" HorizontalAlignment="Left" Height="60" Margin="270,145,0,0" VerticalAlignment="Top" Width="170" FontSize="16" IsEnabled="False" Click="Play_Stereo_Click"/>
         <Button x:Name="Play_Mono" Content="Odtwórz Mono" HorizontalAlignment="Left" Height="60" Margin="480,145,0,0" VerticalAlignment="Top" Width="170" FontSize="16" IsEnabled="False" Click="Play_Mono_Click"/>
         <Button x:Name="Stop" Content="STOP" HorizontalAlignment="Left" Height="60" Margin="685,145,0,0" VerticalAlignment="Top" Width="170" FontSize="16" IsEnabled="False" Click="Stop_Click"/>
-        <Button x:Name="Run" Content="Run DLL" HorizontalAlignment="Left" Height="60" Margin="685,415,0,0" VerticalAlignment="Top" Width="170" FontSize="16" Click="Run_Click"/>
+        <Button x:Name="Run" Content="Run DLL" HorizontalAlignment="Left" Height="60" Margin="685,415,0,0" VerticalAlignment="Top" Width="170" FontSize="16" Click="Run_Click" IsEnabled="False"/>
         <Button x:Name="Test" Content="Testuj" HorizontalAlignment="Left" Height="60" Margin="480,415,0,0" VerticalAlignment="Top" Width="170" FontSize="16" IsEnabled="False"/>
         <Label x:Name="Thread_Count" Content="{Binding ElementName=Thread, Path=Value}" ContentStringFormat="Wątki: {0}" HorizontalAlignment="Left" Height="34" Margin="75,264,0,0" VerticalAlignment="Top" Width="170" Foreground="White" FontSize="16"/>
         <Slider x:Name="Thread" HorizontalAlignment="Left" Height="36" Margin="75,310,0,0" VerticalAlignment="Top" Width="780" RenderTransformOrigin="0.5,0.5" IsTabStop="False" Minimum="1" Maximum="64" IsSnapToTickEnabled="True">

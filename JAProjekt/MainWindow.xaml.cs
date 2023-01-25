@@ -13,7 +13,6 @@ namespace JAProjekt
 	/// </summary>
 	public partial class MainWindow : Window
 	{
-		//private SoundPlayer player;
 		private string inputPath = "";
 		private string outputPath = "";
 		private int sampleRate = 0;
@@ -23,12 +22,12 @@ namespace JAProjekt
 		private float[] Mono = Array.Empty<float>();
 
 		[DllImport(@"C:\Grzesia\Projekty\Visual Studio 2022\JAProjekt\x64\Debug\StereoToMonoConverterASM.dll")]
-		static extern int StereoToMonoAsm(int a, int b);
+		static extern void StereoToMonoAsm(float[] a, int b, float[] c);
 
 
 		public void ReadWav(string path)
 		{
-			using MediaFoundationReader media = new MediaFoundationReader(path);
+			using MediaFoundationReader media = new(path);
 			
 			sampleRate = media.WaveFormat.SampleRate;
 			bitsPerSample = media.WaveFormat.BitsPerSample;
@@ -46,16 +45,19 @@ namespace JAProjekt
 			{
 				Stereo[i] = _waveBuffer.FloatBuffer[i];
 			}
+
+			outputPath = GenerateFileName(inputPath);
 		}
 
-		public void GenerateFileName()
+		public static string GenerateFileName(string path)
 		{
-			int idx = inputPath.LastIndexOf('.');
+			int idx = path.LastIndexOf('.');
 
 			if (idx != -1)
 			{
-				outputPath = string.Concat(inputPath.AsSpan(0, idx), "_MONO", inputPath.AsSpan(idx + 1));
+				return string.Concat(path.AsSpan(0, idx), "_MONO", path.AsSpan(idx + 1));
 			}
+			return "";
 		}
 
 	public void WriteWav(float[] floatOutput)
@@ -80,6 +82,9 @@ namespace JAProjekt
 				inputPath = openFileDialog.FileName;
 				FileName.Content = openFileDialog.SafeFileName;
 
+				ReadWav(inputPath);
+
+				Run.IsEnabled= true;
 				Play_Stereo.IsEnabled = true;
 			}
 
@@ -96,7 +101,10 @@ namespace JAProjekt
 
 		private void Play_Mono_Click(object sender, RoutedEventArgs e)
 		{
-			//TODO
+			SoundPlayer player = new(outputPath);
+			player.Play();
+
+			Stop.IsEnabled = true;
 		}
 
 		private void Stop_Click(object sender, RoutedEventArgs e)
@@ -110,7 +118,10 @@ namespace JAProjekt
 		{
 			if(CSharp.IsChecked == true)
 			{
-				Mono = StereoToMonoConverter(Stereo);
+				Mono = StereoToMonoConverter.StereoToMono(Stereo, channels);
+				WriteWav(Mono);
+
+				Play_Mono.IsEnabled = true;
 			}
 			else if(ASM.IsChecked == true)
 			{
