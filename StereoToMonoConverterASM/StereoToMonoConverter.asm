@@ -2,28 +2,29 @@
 
 .data
 half DWORD 0.5
-one DWORD 1
-;TEMP DWORD
 
 .code
 StereoToMonoAsm proc
 
-	MOV R12, RDX								;ZAPIS ROZMIARU TABLICY
-	MOV R9, R12
+	MOV R9, RDX								;ZAPIS ROZMIARU TABLICY
 	SHR R9, 1								;ROZMIAR WYJSCIOWEJ
-	XOR R10, R10							;POZYCJA WSKANIKA
+	XOR R10, R10							;POZYCJA WSKANIKA wej
 	XOR R11, R11							;STRA¯NIK WYPE£NIENIA YMM
-	VZEROALL
+	XOR R12, R12							;pozycja wskaŸnika wyj
+	;VZEROALL
 
 	VBROADCASTSS YMM9, half
-	;VBROADCASTSS YMM9, one
 
 wpisz:
+	VXORPD  ymm0, ymm0, ymm0
+	VXORPD  ymm1, ymm1, ymm1
+	VXORPD  ymm2, ymm2, ymm2
 
 	ADDSS XMM0, DWORD PTR [RCX+(R10*4)]		;1 float
 	INC R10
 	ADDSS XMM1, DWORD PTR [RCX+(R10*4)]
 	INC R10
+	INC R11
 
 	DEC RDX
 	DEC RDX
@@ -36,6 +37,7 @@ wpisz:
 	INC R10
 	ADDSS XMM1, DWORD PTR [RCX+(R10*4)]
 	INC R10
+	INC R11
 
 	DEC RDX
 	DEC RDX
@@ -48,6 +50,7 @@ wpisz:
 	INC R10
 	ADDSS XMM1, DWORD PTR [RCX+(R10*4)]
 	INC R10
+	INC R11
 
 	DEC RDX
 	DEC RDX
@@ -60,23 +63,20 @@ wpisz:
 	INC R10
 	ADDSS XMM1, DWORD PTR [RCX+(R10*4)]
 	INC R10
+	INC R11
 
 	DEC RDX
 	DEC RDX
-	JZ dodaj
-
-	CMP R11, 1										; To ca³e mo¿e wylecieæ....
-	JE dodaj										;
-													;
-	VPERM2F128 ymm0, ymm0, ymm0, 1H					
-	VPERM2F128 ymm1, ymm1, ymm1, 1H					
-													;
-	INC R11											;
+	JZ dodaj									
+													
+	VPERM2F128 ymm0, ymm0, ymm0, 1H			;SWAP
+	VPERM2F128 ymm1, ymm1, ymm1, 1H													
 
 	ADDSS XMM0, DWORD PTR [RCX+(R10*4)]		;5 float
 	INC R10
 	ADDSS XMM1, DWORD PTR [RCX+(R10*4)]
 	INC R10
+	INC R11
 
 	DEC RDX
 	DEC RDX
@@ -89,6 +89,7 @@ wpisz:
 	INC R10
 	ADDSS XMM1, DWORD PTR [RCX+(R10*4)]
 	INC R10
+	INC R11
 
 	DEC RDX
 	DEC RDX
@@ -101,11 +102,12 @@ wpisz:
 	INC R10
 	ADDSS XMM1, DWORD PTR [RCX+(R10*4)]
 	INC R10
+	INC R11
 
 	DEC RDX
 	DEC RDX
-	
 	JZ dodaj
+
 	SHUFPS XMM0, XMM0, 93H
 	SHUFPS XMM1, XMM1, 93H
 
@@ -113,6 +115,7 @@ wpisz:
 	INC R10
 	ADDSS XMM1, DWORD PTR [RCX+(R10*4)]
 	INC R10
+	INC R11
 
 	DEC RDX
 	DEC RDX
@@ -124,17 +127,105 @@ dodaj:
 	VADDPS ymm8, ymm0, ymm1
 	VMULPS ymm2, ymm8, ymm9
 	;VPSRLD ymm2, ymm8, ymm9				;AVX2 NIE DZIA£A MIMO ¯E POWINNO!! >_<
-	XOR R11, R11
 
 wypisz:
+
+	VPERM2F128 ymm2, ymm2, ymm2, 1H			;SWAP
+
+	SHUFPS XMM2, XMM2, 93H
+
+	MOVSS DWORD PTR [R8+(R12*4)], XMM2		;1 float
+
+	INC R12
 	DEC R9
-	MOVSS DWORD PTR [R8+(R9*4)], XMM2
-	;movss rax, xmm2
-	PEXTRD EAX, XMM2, 0
-	;MOV [RCX+(R9*4)], EAX
+	JZ koniec
+
+	DEC R11
+	JZ WPISZ
+
+	SHUFPS XMM2, XMM2, 93H
+
+	MOVSS DWORD PTR [R8+(R12*4)], XMM2		;2 float
+
+	INC R12
+	DEC R9
+	JZ koniec
+
+	DEC R11
+	JZ WPISZ
+
+	SHUFPS XMM2, XMM2, 93H
+
+	MOVSS DWORD PTR [R8+(R12*4)], XMM2		;3 float
+
+	INC R12
+	DEC R9
+	JZ koniec
+
+	DEC R11
+	JZ WPISZ
+
+	SHUFPS XMM2, XMM2, 93H
+
+	MOVSS DWORD PTR [R8+(R12*4)], XMM2		;4 float
+
+	INC R12
+	DEC R9
+	JZ koniec
+
+	DEC R11
+	JZ WPISZ
+
+	VPERM2F128 ymm2, ymm2, ymm2, 1H			;SWAP
+
+	SHUFPS XMM2, XMM2, 93H
+
+	MOVSS DWORD PTR [R8+(R12*4)], XMM2		;5 float
+
+	INC R12
+	DEC R9
+	JZ koniec
+
+	DEC R11
+	JZ WPISZ
+
+	SHUFPS XMM2, XMM2, 93H
+
+	MOVSS DWORD PTR [R8+(R12*4)], XMM2		;6 float
+
+	INC R12
+	DEC R9
+	JZ koniec
+
+	DEC R11
+	JZ WPISZ
+
+	SHUFPS XMM2, XMM2, 93H
+
+	MOVSS DWORD PTR [R8+(R12*4)], XMM2		;7 float
+
+	INC R12
+	DEC R9
+	JZ koniec
+
+	DEC R11
+	JZ WPISZ
+
+	SHUFPS XMM2, XMM2, 93H
+
+	MOVSS DWORD PTR [R8+(R12*4)], XMM2		;8 float
+
+	INC R12
+	DEC R9
+	JZ koniec
+
+	DEC R11
+	JZ WPISZ
+
+	;SHUFPS XMM2, XMM2, 93H
 
 
 koniec:
-ret
+	ret
 StereoToMonoAsm endp
 end
