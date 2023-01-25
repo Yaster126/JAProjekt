@@ -20,11 +20,11 @@
         <RadioButton x:Name="CSharp" Content="C#" HorizontalAlignment="Left" Height="30" Margin="75,415,0,0" VerticalAlignment="Top" Width="150" Foreground="White" FontSize="16" IsChecked="True"/>
         <RadioButton x:Name="ASM" Content="ASM" HorizontalAlignment="Left" Margin="75,459,0,0" VerticalAlignment="Top" Height="30" Width="150" Foreground="White" FontSize="16"/>
         <Button x:Name="Choose" Content="Wybierz plik" HorizontalAlignment="Left" Height="60" Margin="75,145,0,0" VerticalAlignment="Top" Width="170" FontSize="16" Click="Choose_Click"/>
-        <Button x:Name="Play_Stereo" Content="Odtwórz Stereo" HorizontalAlignment="Left" Height="60" Margin="270,145,0,0" VerticalAlignment="Top" Width="170" FontSize="16"/>
-        <Button x:Name="Play_Mono" Content="Odtwórz Mono" HorizontalAlignment="Left" Height="60" Margin="480,145,0,0" VerticalAlignment="Top" Width="170" FontSize="16"/>
-        <Button x:Name="Stop" Content="STOP" HorizontalAlignment="Left" Height="60" Margin="685,145,0,0" VerticalAlignment="Top" Width="170" FontSize="16"/>
+        <Button x:Name="Play_Stereo" Content="Odtwórz Stereo" HorizontalAlignment="Left" Height="60" Margin="270,145,0,0" VerticalAlignment="Top" Width="170" FontSize="16" IsEnabled="False"/>
+        <Button x:Name="Play_Mono" Content="Odtwórz Mono" HorizontalAlignment="Left" Height="60" Margin="480,145,0,0" VerticalAlignment="Top" Width="170" FontSize="16" IsEnabled="False"/>
+        <Button x:Name="Stop" Content="STOP" HorizontalAlignment="Left" Height="60" Margin="685,145,0,0" VerticalAlignment="Top" Width="170" FontSize="16" IsEnabled="False"/>
         <Button x:Name="Run" Content="Run DLL" HorizontalAlignment="Left" Height="60" Margin="685,415,0,0" VerticalAlignment="Top" Width="170" FontSize="16"/>
-        <Button x:Name="Test" Content="Testuj" HorizontalAlignment="Left" Height="60" Margin="480,415,0,0" VerticalAlignment="Top" Width="170" FontSize="16"/>
+        <Button x:Name="Test" Content="Testuj" HorizontalAlignment="Left" Height="60" Margin="480,415,0,0" VerticalAlignment="Top" Width="170" FontSize="16" IsEnabled="False"/>
         <Label x:Name="Thread_Count" Content="{Binding ElementName=Thread, Path=Value}" ContentStringFormat="Wątki: {0}" HorizontalAlignment="Left" Height="34" Margin="75,264,0,0" VerticalAlignment="Top" Width="170" Foreground="White" FontSize="16"/>
         <Slider x:Name="Thread" HorizontalAlignment="Left" Height="36" Margin="75,310,0,0" VerticalAlignment="Top" Width="780" RenderTransformOrigin="0.5,0.5" IsTabStop="False" Minimum="1" Maximum="64" TickPlacement="BottomRight" IsSnapToTickEnabled="True">
             <Slider.RenderTransform>
