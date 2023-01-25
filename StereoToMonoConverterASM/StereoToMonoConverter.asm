@@ -1,4 +1,4 @@
-; RCX - wskaünik na tablicÍ (1 arg), RDX - rozmiar tablicy (2 arg), RBX - 3 arg (wskaünik na tab wyj) (kana≥y? Chyba olejÍ, bo nie wiem jak dynamicznie dobieraÊ rejestry...)
+; RCX - wskaünik na tablicÍ (1 arg), RDX - rozmiar tablicy (2 arg), R8 - 3 arg (wskaünik na tab wyj) (kana≥y? Chyba olejÍ, bo nie wiem jak dynamicznie dobieraÊ rejestry...)
 
 .data
 half DWORD 0.5
@@ -8,14 +8,14 @@ one DWORD 1
 .code
 StereoToMonoAsm proc
 
-	MOV R8, RDX								;ZAPIS ROZMIARU TABLICY
-	MOV R9, R8
+	MOV R12, RDX								;ZAPIS ROZMIARU TABLICY
+	MOV R9, R12
 	SHR R9, 1								;ROZMIAR WYJSCIOWEJ
 	XOR R10, R10							;POZYCJA WSKAèNIKA
 	XOR R11, R11							;STRAØNIK WYPE£NIENIA YMM
 	VZEROALL
 
-	;VBROADCASTSS YMM9, half
+	VBROADCASTSS YMM9, half
 	;VBROADCASTSS YMM9, one
 
 wpisz:
@@ -63,10 +63,15 @@ wpisz:
 
 	DEC RDX
 	DEC RDX
-	
 	JZ dodaj
-	SHUFPS XMM0, XMM0, 93H
-	SHUFPS XMM1, XMM1, 93H
+
+	CMP R11, 1										; To ca≥e moøe wylecieÊ....
+	JE dodaj										;
+													;
+	VPERM2F128 ymm0, ymm0, ymm0, 1H					
+	VPERM2F128 ymm1, ymm1, ymm1, 1H					
+													;
+	INC R11											;
 
 	ADDSS XMM0, DWORD PTR [RCX+(R10*4)]		;5 float
 	INC R10
@@ -113,13 +118,7 @@ wpisz:
 	DEC RDX
 	JZ dodaj
 	
-	CMP R11, 1
-	JE dodaj
-
-	VPERM2F128 ymm0, ymm0, ymm0, 1H
-	VPERM2F128 ymm1, ymm1, ymm1, 1H
-
-	INC R11
+	
 
 dodaj:
 	VADDPS ymm8, ymm0, ymm1
@@ -128,7 +127,11 @@ dodaj:
 	XOR R11, R11
 
 wypisz:
-	;MOVSS DWORD PTR [RBX+(R9*4)], XMM2
+	DEC R9
+	MOVSS DWORD PTR [R8+(R9*4)], XMM2
+	;movss rax, xmm2
+	PEXTRD EAX, XMM2, 0
+	;MOV [RCX+(R9*4)], EAX
 
 
 koniec:

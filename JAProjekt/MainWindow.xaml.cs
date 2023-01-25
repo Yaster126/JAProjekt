@@ -125,7 +125,13 @@ namespace JAProjekt
 			}
 			else if(ASM.IsChecked == true)
 			{
+				Mono = new float[Stereo.Length/2];
+				for (int i = 0; i < Mono.Length; ++i)
+					Mono[i] = 0;
+				StereoToMonoAsm(Stereo, Stereo.Length, Mono);
+				WriteWav(Mono);
 
+				Play_Mono.IsEnabled = true;
 			}
 		}
 	}
