@@ -29,6 +29,7 @@ namespace JAProjekt
 		private string inputPath = "";
 		private string outputPath = "";
 		private int sampleRate = 0;
+		private int bitsPerSample = 0;
 		private float[] Stereo = Array.Empty<float>();
 		private float[] Mono = Array.Empty<float>();
 
