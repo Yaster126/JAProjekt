@@ -101,7 +101,8 @@ namespace JAProjekt
 
 		private void Play_Stereo_Click(object sender, RoutedEventArgs e)
 		{
-			/*SoundPlayer */player = new(inputPath);
+			/*SoundPlayer */
+			player = new(inputPath);
 			player.Load();
 			player.Play();
 
@@ -110,7 +111,8 @@ namespace JAProjekt
 
 		private void Play_Mono_Click(object sender, RoutedEventArgs e)
 		{
-			/*SoundPlayer */player = new(outputPath);
+			/*SoundPlayer */
+			player = new(outputPath);
 			player.Load();
 			player.Play();
 
@@ -124,86 +126,80 @@ namespace JAProjekt
 			Stop.IsEnabled = false;
 		}
 
-		public static IEnumerable<IEnumerable<T>> Split<T>(T[] array, int size)
+		//private static float[][] Split(float[] array, int size)
+		//{
+		//    for (var i = 0; i < (float)array.Length / size; i++)
+		//    {
+		//        yield return (Enumerable)array.Select( i => array.Skip(i * size).Take(size).ToArray()).ToArray();
+		//    }
+		//}
+
+		public float[][] Split(float[] array, int size)
 		{
-			for (var i = 0; i < (float)array.Length / size; i++)
-			{
-				yield return array.Skip(i * size).Take(size);
-			}
+			return Enumerable.Range(0, (array.Length / size) + 1).Select(i => array.Skip(i * size).Take(size).ToArray()).ToArray();
 		}
 
-		private void Tup(object data, float[][] result)
-		{
-			Tuple<int, float[]> tuple = (Tuple<int, float[]>)data;
-			int index = tuple.Item1;
-			float[] temp = (float[])tuple.Item2.Clone();
-			float[] tempOut = StereoToMonoConverter.StereoToMono(temp, index, channels);
-			//float[] tempOut = new float[1];
-			//Array.Copy(tempOut, 0, Mono, index, tempOut.Length);
-			result[index] = (float[])tempOut.Clone();
-		}
+		//private void Tup(object data, float[][] result)
+		//{
+		//	Tuple<int, float[]> tuple = (Tuple<int, float[]>)data;
+		//	int index = tuple.Item1;
+		//	float[] temp = (float[])tuple.Item2.Clone();
+		//	float[] tempOut = StereoToMonoConverter.StereoToMono(temp, channels);
+		//	//float[] tempOut = new float[1];
+		//	//Array.Copy(tempOut, 0, Mono, index, tempOut.Length);
+		//	result[index] = (float[])tempOut.Clone();
+		//}
 
 
 		private void Run_Click(object sender, RoutedEventArgs e)
 		{
-			int size = Stereo.Length / 8;
-			float[][] temp = new float[size][];
-			for (int i = 0; i < temp.Length; ++i)
-			{
-				temp[i] = new float[8];
-				for (int j = 0; j < 8; ++j)
-					temp[i][j] = Stereo[i * 8 + j];
-			}
-
+			float[][] temp = Split(Stereo, 8);
 			float[][] result = new float[temp.Length][];
+			var thread = (int)Thread.Value;
+			Mono = new float[Stereo.Length / channels];
 
 			if (CSharp.IsChecked == true)
 			{
-				// var temp = Split(Stereo, 8);
-
 				var watch = System.Diagnostics.Stopwatch.StartNew();
-				var task = Task.Run(() =>
+				Parallel.For(0, temp.Length, new ParallelOptions { MaxDegreeOfParallelism = thread }, index =>
 				{
-					Parallel.For(0, Stereo.Length, new ParallelOptions { MaxDegreeOfParallelism = (int)Thread.Value }, i =>
-					{
-						Tuple<int, float[]> tuple = Tuple.Create(i, (float[])temp[i]);
-						Tup(tuple, result);
-					});
+					result[index] = StereoToMonoConverter.StereoToMono(temp[index], channels);
 				});
-				task.Wait();
 				watch.Stop();
-				for(int i = 0; i< result.Length; ++i)
-					Array.Copy(result[i], 0, Mono, i*4, result.Length);
-
+				for (int i = 0; i < result.Length; ++i)
+				{
+					int t = result[i].Length;
+					for (int j = 0; j < t; ++j)
+					{
+						Mono[(i * result[i].Length) + j] = result[i][j];
+					}
+				}
 				WriteWav(Mono);
 				Timer.Content = "Czas: " + watch.ElapsedMilliseconds + " ms";
-
 				Play_Mono.IsEnabled = true;
 			}
 			else if (ASM.IsChecked == true)
 			{
-				////private object f = new object();
-				//int f = 0;
+				var watch = System.Diagnostics.Stopwatch.StartNew();
+				Parallel.For(0, temp.Length, new ParallelOptions { MaxDegreeOfParallelism = thread }, index =>
+				{
 
-				//var watch = System.Diagnostics.Stopwatch.StartNew();
+					StereoToMonoAsm(temp[index], channels, result[index]);
+				});
+				watch.Stop();
 
-				////lock (f)
-				////{
-				//	Parallel.ForEach(tempIn, i =>
-				//	{
-				//		StereoToMonoAsm(i, i.Length, tempOut[f]);
-				//		++f;
-				//	});
-				////}
-				//watch.Stop();
+				for (int i = 0; i < result.Length; ++i)
+				{
+					int t = result[i].Length;
+					for (int j = 0; j < t; ++j)
+					{
+						Mono[(i * result[i].Length) + j] = result[i][j];
+					}
+				}
+				WriteWav(Mono);
+				Timer.Content = "Czas: " + watch.ElapsedMilliseconds + " ms";
 
-				//for (int i = 0; i < tempOut.Length; i++)
-				//	Mono = Mono.Concat(tempOut[i]).ToArray();
-
-				//WriteWav(Mono);
-				//Timer.Content = "Czas: " + watch.ElapsedMilliseconds + " ms";
-
-				//Play_Mono.IsEnabled = true;
+				Play_Mono.IsEnabled = true;
 			}
 		}
 	}

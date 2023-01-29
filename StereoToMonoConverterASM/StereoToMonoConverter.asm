@@ -126,7 +126,6 @@ wpisz:
 dodaj:
 	VADDPS ymm8, ymm0, ymm1
 	VMULPS ymm2, ymm8, ymm9
-	;VPSRLD ymm2, ymm8, ymm9				;AVX2 NIE DZIA£A MIMO ¯E POWINNO!! >_<
 
 wypisz:
 
