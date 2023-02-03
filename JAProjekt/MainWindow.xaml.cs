@@ -155,7 +155,7 @@ namespace JAProjekt
 					}
 				}
 				WriteWav(Mono);
-				Timer.Content = "Czas: " + watch.ElapsedMilliseconds + " ms";
+				Timer.Content = "Czas: " + watch.Elapsed.TotalMilliseconds + " ms";
 				Play_Mono.IsEnabled = true;
 			}
 			else if (ASM.IsChecked == true)
@@ -184,7 +184,7 @@ namespace JAProjekt
 					}
 				}
 				WriteWav(Mono);
-				Timer.Content = "Czas: " + watch.ElapsedMilliseconds + " ms";
+				Timer.Content = "Czas: " + watch.Elapsed.TotalMilliseconds + " ms";
 
 				Play_Mono.IsEnabled = true;
 			}
