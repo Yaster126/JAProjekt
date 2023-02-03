@@ -160,10 +160,14 @@ namespace JAProjekt
 			}
 			else if (ASM.IsChecked == true)
 			{
-				Parallel.For(0, result.Length, new ParallelOptions { MaxDegreeOfParallelism = 4 }, index =>
+				//Parallel.For(0, result.Length, new ParallelOptions { MaxDegreeOfParallelism = 4 }, index =>
+				//{
+				//	result[index] = new float[temp[index].Length/2];
+				//});
+				for(int i = 0; i < temp.Length; ++i)
 				{
-					result[index] = new float[temp[index].Length/2];
-				});
+					result[i] = new float[(temp[i].Length)/2];
+				}
 				var watch = System.Diagnostics.Stopwatch.StartNew();
 				Parallel.For(0, temp.Length, new ParallelOptions { MaxDegreeOfParallelism = thread }, index =>
 				{
@@ -184,6 +188,14 @@ namespace JAProjekt
 
 				Play_Mono.IsEnabled = true;
 			}
+		}
+
+		private void Test_Click(object sender, RoutedEventArgs e)
+		{
+			float[] tab = new float[16] { 0.1f, 0.1f, 0.2f, 0.2f, 0.3f, 0.3f, 0.4f, 0.4f, 0.5f, 0.5f, 0.6f, 0.6f, 0.7f, 0.7f, 0.8f, 0.8f };
+			float[] wyj = new float[8];
+
+			StereoToMonoAsm(tab, tab.Length, wyj);
 		}
 	}
 }

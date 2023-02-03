@@ -172,14 +172,14 @@ reszta:
 	SHUFPS XMM2, XMM2, 93H
 	CMP R9, 3
 	JE trzy									;jeœli pozosta³y 3 liczby w wektorze - skocz
-	;SHUFPS XMM2, XMM2, 93H
+	SHUFPS XMM2, XMM2, 93H
 	CMP R9, 2
 	JE dwa									;jeœli pozosta³y 2 liczby w wektorze - skocz
-	;SHUFPS XMM2, XMM2, 93H
+	SHUFPS XMM2, XMM2, 93H
 	CMP R9, 1
 	JE jeden								;jeœli pozosta³a jedna liczba w wektorze - skocz
 
-	;SHUFPS XMM2, XMM2, 4EH					;przywrócenie odpowiedniego ustawienia dla 4 liczb
+	SHUFPS XMM2, XMM2, 4EH					;przywrócenie odpowiedniego ustawienia dla 4 liczb
 
 	MOVSS DWORD PTR [R8+(R12*4)], XMM2		;5 float
 
