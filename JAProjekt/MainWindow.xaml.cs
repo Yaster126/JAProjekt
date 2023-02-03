@@ -126,34 +126,14 @@ namespace JAProjekt
 			Stop.IsEnabled = false;
 		}
 
-		//private static float[][] Split(float[] array, int size)
-		//{
-		//    for (var i = 0; i < (float)array.Length / size; i++)
-		//    {
-		//        yield return (Enumerable)array.Select( i => array.Skip(i * size).Take(size).ToArray()).ToArray();
-		//    }
-		//}
-
-		public float[][] Split(float[] array, int size)
+		public static float[][] Split(float[] array, int size)
 		{
 			return Enumerable.Range(0, (array.Length / size) + 1).Select(i => array.Skip(i * size).Take(size).ToArray()).ToArray();
 		}
 
-		//private void Tup(object data, float[][] result)
-		//{
-		//	Tuple<int, float[]> tuple = (Tuple<int, float[]>)data;
-		//	int index = tuple.Item1;
-		//	float[] temp = (float[])tuple.Item2.Clone();
-		//	float[] tempOut = StereoToMonoConverter.StereoToMono(temp, channels);
-		//	//float[] tempOut = new float[1];
-		//	//Array.Copy(tempOut, 0, Mono, index, tempOut.Length);
-		//	result[index] = (float[])tempOut.Clone();
-		//}
-
-
 		private void Run_Click(object sender, RoutedEventArgs e)
 		{
-			float[][] temp = Split(Stereo, 8);
+			float[][] temp = Split(Stereo, 16);
 			float[][] result = new float[temp.Length][];
 			var thread = (int)Thread.Value;
 			Mono = new float[Stereo.Length / channels];
@@ -180,11 +160,14 @@ namespace JAProjekt
 			}
 			else if (ASM.IsChecked == true)
 			{
+				Parallel.For(0, result.Length, new ParallelOptions { MaxDegreeOfParallelism = 4 }, index =>
+				{
+					result[index] = new float[temp[index].Length/2];
+				});
 				var watch = System.Diagnostics.Stopwatch.StartNew();
 				Parallel.For(0, temp.Length, new ParallelOptions { MaxDegreeOfParallelism = thread }, index =>
 				{
-
-					StereoToMonoAsm(temp[index], channels, result[index]);
+					StereoToMonoAsm(temp[index], temp[index].Length, result[index]);
 				});
 				watch.Stop();
 
