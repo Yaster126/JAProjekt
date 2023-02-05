@@ -1,4 +1,8 @@
-; RCX - wskaünik na tablicÍ (1 arg), RDX - rozmiar tablicy (2 arg), R8 - 3 arg (wskaünik na tab wyj)
+; Konwerter plikÛw WAVE stereo na mono
+; Algorytm w jÍzyku asemblera
+; 29.01.2023, sem. 5, Grzegorz Nowak
+
+; RCX - wskaünik na tablicÍ danych wejúciowych (1 arg), RDX - rozmiar tablicy wejúciowej (2 arg), R8 - wskaünik na tablicÍ danych wyjúciowych (3 arg)
 
 .data
 half DWORD 0.5
@@ -11,9 +15,8 @@ StereoToMonoAsm proc
 	XOR R10, R10							;POZYCJA WSKAèNIKA wej
 	XOR R11, R11							;STRAØNIK WYPE£NIENIA YMM
 	XOR R12, R12							;pozycja wskaünika wyj
-	;VZEROALL
 
-	VBROADCASTSS YMM9, half					;wype≥nienie YMM przez 0.5f
+	VBROADCASTSS YMM9, half					;wype≥nienie YMM9 przez 0.5f
 
 wpisz:
 	VXORPD  ymm0, ymm0, ymm0				;wyzeruj YMM0
@@ -28,7 +31,7 @@ wpisz:
 
 	DEC RDX
 	DEC RDX
-	JZ dodaj
+	JZ dodaj								;jeúli wpisano do wektorÛw wszystkie przekazane liczby - skocz
 	
 	SHUFPS XMM0, XMM0, 93H					;rotacje zawartoúci wektorÛw
 	SHUFPS XMM1, XMM1, 93H
@@ -41,7 +44,7 @@ wpisz:
 
 	DEC RDX
 	DEC RDX
-	JZ dodaj
+	JZ dodaj								;jeúli wpisano do wektorÛw wszystkie przekazane liczby - skocz
 	
 	SHUFPS XMM0, XMM0, 93H					;rotacje zawartoúci wektorÛw
 	SHUFPS XMM1, XMM1, 93H
@@ -54,7 +57,7 @@ wpisz:
 
 	DEC RDX
 	DEC RDX
-	JZ dodaj
+	JZ dodaj								;jeúli wpisano do wektorÛw wszystkie przekazane liczby - skocz
 
 	SHUFPS XMM0, XMM0, 93H
 	SHUFPS XMM1, XMM1, 93H
@@ -67,7 +70,7 @@ wpisz:
 
 	DEC RDX
 	DEC RDX
-	JZ dodaj									
+	JZ dodaj								;jeúli wpisano do wektorÛw wszystkie przekazane liczby - skocz									
 													
 	VPERM2F128 ymm0, ymm0, ymm0, 1H			;SWAP
 	VPERM2F128 ymm1, ymm1, ymm1, 1H			; arg1 - rejestr docelowy, arg2 i 3 - rejestry do przestawienia, arg4 - instrukcja jak przestawiÊ
@@ -80,7 +83,7 @@ wpisz:
 
 	DEC RDX
 	DEC RDX
-	JZ dodaj
+	JZ dodaj								;jeúli wpisano do wektorÛw wszystkie przekazane liczby - skocz
 	
 	SHUFPS XMM0, XMM0, 93H
 	SHUFPS XMM1, XMM1, 93H
@@ -93,7 +96,7 @@ wpisz:
 
 	DEC RDX
 	DEC RDX
-	JZ dodaj
+	JZ dodaj								;jeúli wpisano do wektorÛw wszystkie przekazane liczby - skocz
 	
 	SHUFPS XMM0, XMM0, 93H
 	SHUFPS XMM1, XMM1, 93H
@@ -106,7 +109,7 @@ wpisz:
 
 	DEC RDX
 	DEC RDX
-	JZ dodaj
+	JZ dodaj								;jeúli wpisano do wektorÛw wszystkie przekazane liczby - skocz
 
 	SHUFPS XMM0, XMM0, 93H
 	SHUFPS XMM1, XMM1, 93H
@@ -126,7 +129,7 @@ dodaj:
 
 wypisz:
 	CMP R11, 4
-	JBE reszta								;jeúli wpisanych liczb by≥o 4 lub mniej (mieúci siÍ w XMM)- skocz
+	JBE cztery								;jeúli wpisanych liczb by≥o 4 lub mniej (mieúci siÍ w XMM) - skocz
 	VPERM2F128 ymm2, ymm2, ymm2, 1H			;SWAP
 
 	SHUFPS XMM2, XMM2, 93H
@@ -168,7 +171,7 @@ wypisz:
 	VPERM2F128 ymm2, ymm2, ymm2, 1H			;SWAP
 
 
-reszta:
+cztery:
 	SHUFPS XMM2, XMM2, 93H
 	CMP R9, 3
 	JE trzy									;jeúli pozosta≥y 3 liczby w wektorze - skocz

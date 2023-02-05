@@ -6,37 +6,38 @@
         xmlns:local="clr-namespace:JAProjekt"
         mc:Ignorable="d"
         Title="Stereo To Mono" Height="570" Width="930">
-    <Window.Background>
-        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-            <GradientStop Color="Black" Offset="1"/>
-            <GradientStop Color="#FF51B164" Offset="0"/>
-        </LinearGradientBrush>
-    </Window.Background>
-    <Grid>
-        <Rectangle HorizontalAlignment="Left" Margin="45,40,0,0" Stroke="White" Width="840" StrokeThickness="3" Height="185" VerticalAlignment="Top" RenderTransformOrigin="1,0" RadiusY="22.5" RadiusX="22.5"/>
-        <Rectangle HorizontalAlignment="Left" Margin="45,250,0,0" Stroke="White" Width="840" StrokeThickness="3" Height="95" VerticalAlignment="Top" RenderTransformOrigin="1,0" RadiusY="22.5" RadiusX="22.5"/>
-        <Rectangle HorizontalAlignment="Left" Margin="45,375,0,0" Stroke="White" Width="225" StrokeThickness="3" Height="140" VerticalAlignment="Top" RenderTransformOrigin="1,0" RadiusY="22.5" RadiusX="22.5"/>
-        <Label x:Name="FileName" Content="&lt;Nie wybrano pliku&gt;" HorizontalAlignment="Center" Height="65" Margin="0,59,0,0" VerticalAlignment="Top" Width="780" FontSize="24" Foreground="White"/>
-        <RadioButton x:Name="CSharp" Content="C#" HorizontalAlignment="Left" Height="30" Margin="75,415,0,0" VerticalAlignment="Top" Width="150" Foreground="White" FontSize="16" IsChecked="True"/>
-        <RadioButton x:Name="ASM" Content="ASM" HorizontalAlignment="Left" Margin="75,459,0,0" VerticalAlignment="Top" Height="30" Width="150" Foreground="White" FontSize="16"/>
-        <Button x:Name="Choose" Content="Wybierz plik" HorizontalAlignment="Left" Height="60" Margin="75,145,0,0" VerticalAlignment="Top" Width="170" FontSize="16" Click="Choose_Click"/>
-        <Button x:Name="Play_Stereo" Content="Odtwórz Stereo" HorizontalAlignment="Left" Height="60" Margin="270,145,0,0" VerticalAlignment="Top" Width="170" FontSize="16" IsEnabled="False" Click="Play_Stereo_Click"/>
-        <Button x:Name="Play_Mono" Content="Odtwórz Mono" HorizontalAlignment="Left" Height="60" Margin="480,145,0,0" VerticalAlignment="Top" Width="170" FontSize="16" IsEnabled="False" Click="Play_Mono_Click"/>
-        <Button x:Name="Stop" Content="STOP" HorizontalAlignment="Left" Height="60" Margin="685,145,0,0" VerticalAlignment="Top" Width="170" FontSize="16" IsEnabled="False" Click="Stop_Click"/>
-        <Button x:Name="Run" Content="Run DLL" HorizontalAlignment="Left" Height="60" Margin="685,415,0,0" VerticalAlignment="Top" Width="170" FontSize="16" Click="Run_Click" IsEnabled="False"/>
-        <Button x:Name="Test" Content="Testuj" HorizontalAlignment="Left" Height="60" Margin="480,415,0,0" VerticalAlignment="Top" Width="170" FontSize="16" IsEnabled="False" Click="Test_Click"/>
-        <Label x:Name="Thread_Count" Content="{Binding ElementName=Thread, Path=Value}" ContentStringFormat="Wątki: {0}" HorizontalAlignment="Left" Height="34" Margin="75,264,0,0" VerticalAlignment="Top" Width="170" Foreground="White" FontSize="16"/>
-        <Slider x:Name="Thread" HorizontalAlignment="Left" Height="36" Margin="75,310,0,0" VerticalAlignment="Top" Width="780" RenderTransformOrigin="0.5,0.5" IsTabStop="False" Minimum="1" Maximum="64" IsSnapToTickEnabled="True">
-            <Slider.RenderTransform>
-                <TransformGroup>
-                    <ScaleTransform ScaleY="1"/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
-                </TransformGroup>
-            </Slider.RenderTransform>
-        </Slider>
-        <Label x:Name="Timer" Content="Czas:" HorizontalAlignment="Left" Height="30" Margin="320,430,0,0" VerticalAlignment="Top" Width="145" Foreground="White" FontSize="14"/>
+	<Window.Background>
+		<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+			<GradientStop Color="Black" Offset="1"/>
+			<GradientStop Color="#FF51B164" Offset="0"/>
+		</LinearGradientBrush>
+	</Window.Background>
+	<Grid>
+		<Rectangle HorizontalAlignment="Left" Margin="45,40,0,0" Stroke="White" Width="840" StrokeThickness="3" Height="185" VerticalAlignment="Top" RenderTransformOrigin="1,0" RadiusY="22.5" RadiusX="22.5"/>
+		<Rectangle HorizontalAlignment="Left" Margin="45,250,0,0" Stroke="White" Width="840" StrokeThickness="3" Height="95" VerticalAlignment="Top" RenderTransformOrigin="1,0" RadiusY="22.5" RadiusX="22.5"/>
+		<Rectangle HorizontalAlignment="Left" Margin="45,375,0,0" Stroke="White" Width="225" StrokeThickness="3" Height="140" VerticalAlignment="Top" RenderTransformOrigin="1,0" RadiusY="22.5" RadiusX="22.5"/>
+		<Label x:Name="FileName" Content="&lt;Nie wybrano pliku&gt;" HorizontalAlignment="Center" Height="65" Margin="0,59,0,0" VerticalAlignment="Top" Width="780" FontSize="24" Foreground="White"/>
+		<RadioButton x:Name="CSharp" Content="C#" HorizontalAlignment="Left" Height="30" Margin="75,415,0,0" VerticalAlignment="Top" Width="150" Foreground="White" FontSize="16" IsChecked="True"/>
+		<RadioButton x:Name="ASM" Content="ASM" HorizontalAlignment="Left" Margin="75,459,0,0" VerticalAlignment="Top" Height="30" Width="150" Foreground="White" FontSize="16"/>
+		<Button x:Name="Choose" Content="Wybierz plik" HorizontalAlignment="Left" Height="60" Margin="75,145,0,0" VerticalAlignment="Top" Width="170" FontSize="16" Click="Choose_Click"/>
+		<Button x:Name="Play_Stereo" Content="Odtwórz Stereo" HorizontalAlignment="Left" Height="60" Margin="270,145,0,0" VerticalAlignment="Top" Width="170" FontSize="16" IsEnabled="False" Click="Play_Stereo_Click"/>
+		<Button x:Name="Play_Mono" Content="Odtwórz Mono" HorizontalAlignment="Left" Height="60" Margin="480,145,0,0" VerticalAlignment="Top" Width="170" FontSize="16" IsEnabled="False" Click="Play_Mono_Click"/>
+		<Button x:Name="Stop" Content="STOP" HorizontalAlignment="Left" Height="60" Margin="685,145,0,0" VerticalAlignment="Top" Width="170" FontSize="16" IsEnabled="False" Click="Stop_Click"/>
+		<Button x:Name="Run" Content="Run" HorizontalAlignment="Left" Height="60" Margin="685,415,0,0" VerticalAlignment="Top" Width="170" FontSize="16" Click="Run_Click" IsEnabled="False"/>
+		<Button x:Name="Test" Content="Testuj" HorizontalAlignment="Left" Height="60" Margin="480,415,0,0" VerticalAlignment="Top" Width="170" FontSize="16" IsEnabled="False" Click="Test_Click"/>
+		<Label x:Name="Thread_Count" Content="{Binding ElementName=Thread, Path=Value}" ContentStringFormat="Wątki: {0}" HorizontalAlignment="Left" Height="34" Margin="75,264,0,0" VerticalAlignment="Top" Width="170" Foreground="White" FontSize="16"/>
+		<Slider x:Name="Thread" HorizontalAlignment="Left" Height="36" Margin="75,310,0,0" VerticalAlignment="Top" Width="780" RenderTransformOrigin="0.5,0.5" IsTabStop="False" Minimum="1" Maximum="64" IsSnapToTickEnabled="True">
+			<Slider.RenderTransform>
+				<TransformGroup>
+					<ScaleTransform ScaleY="1"/>
+					<SkewTransform/>
+					<RotateTransform/>
+					<TranslateTransform/>
+				</TransformGroup>
+			</Slider.RenderTransform>
+		</Slider>
+		<Label x:Name="Timer" Content="Czas:" HorizontalAlignment="Left" Height="30" Margin="320,430,0,0" VerticalAlignment="Top" Width="145" Foreground="White" FontSize="14"/>
+		<CheckBox x:Name="Test_mode" Content="Test Mode" HorizontalAlignment="Left" Height="20" Margin="520,495,0,0" VerticalAlignment="Top" Width="90" Checked="Test_Checked" Unchecked="Test_Unchecked" Foreground="White" FontSize="14"/>
 
-    </Grid>
+	</Grid>
 </Window>

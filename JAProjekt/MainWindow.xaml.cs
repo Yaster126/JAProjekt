@@ -7,11 +7,7 @@ using System.Runtime.InteropServices;
 using StereoToMonoConverterCSharp;
 using System.Threading.Tasks;
 using System.Linq;
-using System.Collections.Generic;
-using System.Windows.Documents;
-using System.Windows.Media;
-using System.Reflection;
-using System.Threading;
+using System.IO;
 
 namespace JAProjekt
 {
@@ -20,7 +16,6 @@ namespace JAProjekt
 	/// </summary>
 	public partial class MainWindow : Window
 	{
-		SoundPlayer player;
 		private string inputPath = "";
 		private string outputPath = "";
 		private int sampleRate = 0;
@@ -47,11 +42,24 @@ namespace JAProjekt
 			IWaveProvider stream = new Wave16ToFloatProvider(media);
 			WaveBuffer waveBuffer = new(byteLength);
 			stream.Read(waveBuffer, 0, byteLength);
-			Stereo = new float[tabSize];
-
-			for (int i = 0; i < tabSize; i++)
+			if (tabSize % 2 == 0)
 			{
-				Stereo[i] = waveBuffer.FloatBuffer[i];
+				Stereo = new float[tabSize];
+
+				for (int i = 0; i < tabSize; i++)
+				{
+					Stereo[i] = waveBuffer.FloatBuffer[i];
+				}
+			}
+			else
+			{
+				Stereo = new float[tabSize + 1];
+
+				for (int i = 0; i < tabSize; i++)
+				{
+					Stereo[i] = waveBuffer.FloatBuffer[i];
+				}
+				Stereo[tabSize] = 0f;
 			}
 
 			outputPath = GenerateFileName(inputPath);
@@ -91,18 +99,19 @@ namespace JAProjekt
 				FileName.Content = openFileDialog.SafeFileName;
 
 				ReadWav(inputPath);
-
-				Run.IsEnabled = true;
-				Play_Stereo.IsEnabled = true;
+				if (Test_mode.IsChecked == false)
+				{
+					Run.IsEnabled = true;
+					Play_Stereo.IsEnabled = true;
+				}
+				else
+					Test.IsEnabled = true;
 			}
-
-
 		}
 
 		private void Play_Stereo_Click(object sender, RoutedEventArgs e)
 		{
-			/*SoundPlayer */
-			player = new(inputPath);
+			SoundPlayer player = new(inputPath);
 			player.Load();
 			player.Play();
 
@@ -111,8 +120,7 @@ namespace JAProjekt
 
 		private void Play_Mono_Click(object sender, RoutedEventArgs e)
 		{
-			/*SoundPlayer */
-			player = new(outputPath);
+			SoundPlayer player = new(outputPath);
 			player.Load();
 			player.Play();
 
@@ -121,7 +129,7 @@ namespace JAProjekt
 
 		private void Stop_Click(object sender, RoutedEventArgs e)
 		{
-			//SoundPlayer player = new();
+			SoundPlayer player = new();
 			player.Stop();
 			Stop.IsEnabled = false;
 		}
@@ -146,6 +154,7 @@ namespace JAProjekt
 					result[index] = StereoToMonoConverter.StereoToMono(temp[index], channels);
 				});
 				watch.Stop();
+
 				for (int i = 0; i < result.Length; ++i)
 				{
 					int t = result[i].Length;
@@ -160,20 +169,19 @@ namespace JAProjekt
 			}
 			else if (ASM.IsChecked == true)
 			{
-				//Parallel.For(0, result.Length, new ParallelOptions { MaxDegreeOfParallelism = 4 }, index =>
-				//{
-				//	result[index] = new float[temp[index].Length/2];
-				//});
-				for(int i = 0; i < temp.Length; ++i)
+				Parallel.For(0, result.Length, new ParallelOptions { MaxDegreeOfParallelism = 4 }, index =>
 				{
-					result[i] = new float[(temp[i].Length)/2];
-				}
+					result[index] = new float[temp[index].Length / 2];
+				});
+
+
 				var watch = System.Diagnostics.Stopwatch.StartNew();
 				Parallel.For(0, temp.Length, new ParallelOptions { MaxDegreeOfParallelism = thread }, index =>
 				{
 					StereoToMonoAsm(temp[index], temp[index].Length, result[index]);
 				});
 				watch.Stop();
+
 
 				for (int i = 0; i < result.Length; ++i)
 				{
@@ -183,7 +191,9 @@ namespace JAProjekt
 						Mono[(i * result[i].Length) + j] = result[i][j];
 					}
 				}
+
 				WriteWav(Mono);
+
 				Timer.Content = "Czas: " + watch.Elapsed.TotalMilliseconds + " ms";
 
 				Play_Mono.IsEnabled = true;
@@ -192,10 +202,79 @@ namespace JAProjekt
 
 		private void Test_Click(object sender, RoutedEventArgs e)
 		{
-			float[] tab = new float[16] { 0.1f, 0.1f, 0.2f, 0.2f, 0.3f, 0.3f, 0.4f, 0.4f, 0.5f, 0.5f, 0.6f, 0.6f, 0.7f, 0.7f, 0.8f, 0.8f };
-			float[] wyj = new float[8];
+			float[][] temp = Split(Stereo, 16);
+			float[][] result = new float[temp.Length][];
+			Mono = new float[Stereo.Length / channels];
 
-			StereoToMonoAsm(tab, tab.Length, wyj);
+			StreamWriter file = new("Results.txt", append: true);
+			file.WriteLine("\n" + inputPath);
+
+			file.WriteLine("C#");
+			for (int thread = 1; thread < 65; ++thread)
+			{
+				file.WriteLine("Wątków: " + thread);
+				for (int i = 0; i < 11; ++i)
+				{
+					var watch = System.Diagnostics.Stopwatch.StartNew();
+					Parallel.For(0, temp.Length, new ParallelOptions { MaxDegreeOfParallelism = thread }, index =>
+					{
+						result[index] = StereoToMonoConverter.StereoToMono(temp[index], channels);
+					});
+					watch.Stop();
+
+					file.WriteLine("\t" + i + ": " + watch.Elapsed.TotalMilliseconds.ToString());
+				}
+			}
+
+			Parallel.For(0, result.Length, new ParallelOptions { MaxDegreeOfParallelism = 4 }, index =>
+			{
+				result[index] = new float[temp[index].Length / 2];
+			});
+
+			file.WriteLine("ASM");
+			for (int thread = 1; thread < 65; ++thread)
+			{
+				file.WriteLine("Wątków: " + thread);
+				for (int i = 0; i < 11; ++i)
+				{
+					var watch = System.Diagnostics.Stopwatch.StartNew();
+					Parallel.For(0, temp.Length, new ParallelOptions { MaxDegreeOfParallelism = thread }, index =>
+					{
+						StereoToMonoAsm(temp[index], temp[index].Length, result[index]);
+					});
+					watch.Stop();
+
+					file.WriteLine("\t" + i + ": " + watch.Elapsed.TotalMilliseconds.ToString());
+				}
+			}
+
+			file.Close();
+			MessageBox.Show("Done");
+
+		}
+
+		private void Test_Checked(object sender, RoutedEventArgs e)
+		{
+			if (inputPath != "")
+				Test.IsEnabled = true;
+			Run.IsEnabled = false;
+			ASM.IsEnabled = false;
+			CSharp.IsEnabled = false;
+			Thread.IsEnabled = false;
+			Play_Stereo.IsEnabled = false;
+		}
+
+		private void Test_Unchecked(object sender, RoutedEventArgs e)
+		{
+			Test.IsEnabled = false;
+			if (inputPath != "")
+			{
+				Run.IsEnabled = true;
+				Play_Stereo.IsEnabled = true;
+			}
+			ASM.IsEnabled = true;
+			CSharp.IsEnabled = true;
+			Thread.IsEnabled = true;
 		}
 	}
 }

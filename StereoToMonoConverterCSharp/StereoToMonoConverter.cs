@@ -1,9 +1,4 @@
-﻿using Microsoft.VisualBasic;
-using NAudio.Wave;
-using NAudio.Wave.SampleProviders;
-using System;
-
-namespace StereoToMonoConverterCSharp
+﻿namespace StereoToMonoConverterCSharp
 {
     public class StereoToMonoConverter
     {
@@ -25,20 +20,6 @@ namespace StereoToMonoConverterCSharp
             }
 
             return result;
-        }
-
-        public static void StereoToMono(float[] data, int indexIn, float[] result, int channels)
-        {
-            float temp = 0;
-
-            for (int j = 0; j < channels; j++)
-            {
-
-                temp += data[indexIn + j];
-
-            }
-            result[indexIn / 2] = temp / channels;
-
         }
     }
 }
