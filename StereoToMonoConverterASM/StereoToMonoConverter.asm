@@ -223,9 +223,6 @@ jeden:
 	DEC R11
 	JZ WPISZ
 
-	;SHUFPS XMM2, XMM2, 93H
-
-
 koniec:
 	ret
 StereoToMonoAsm endp

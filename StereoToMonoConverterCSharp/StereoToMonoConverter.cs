@@ -1,4 +1,8 @@
-﻿namespace StereoToMonoConverterCSharp
+﻿//Konwerter plików WAVE stereo na mono
+//Algorytm w języku asemblera
+//29.01.2023, sem. 5, Grzegorz Nowak
+
+namespace StereoToMonoConverterCSharp
 {
     public class StereoToMonoConverter
     {
